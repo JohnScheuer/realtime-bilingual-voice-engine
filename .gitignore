@@ -1,0 +1,26 @@
+# Build and compiled binaries
+build/
+bin/
+lib/
+models/*.bin
+benchmark_telemetry.csv
+
+# CMake temporary files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Object files and static libraries
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+
+# IDE and Python
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+.DS_Store
