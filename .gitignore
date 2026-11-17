@@ -1,26 +1,70 @@
-# Build and compiled binaries
+# ==============================================================================
+# REAL-TIME BILINGUAL VOICE ENGINE - GITIGNORE
+# Author: João Felipe de Souza (github.com/JohnScheuer)
+# ==============================================================================
+
+# Build Directories
 build/
+build_win/
 bin/
 lib/
-models/*.bin
-benchmark_telemetry.csv
-
-# CMake temporary files
+out/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+*.cmake
 
-# Object files and static libraries
+# C++ / CUDA Executables & Binaries
+*.exe
+*.out
+*.app
+*.elf
+*.bin
+
+# Compiler / Linker Output Files
 *.o
-*.a
+*.obj
 *.so
 *.dylib
 *.dll
+*.lib
+*.a
+*.exp
+*.pdb
+*.idb
 
-# IDE and Python
+# Visual Studio & Windows Artifacts
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+x64/
+x86/
+Debug/
+Release/
+*.dir/
+
+# IDE / Editor Files
 .vscode/
 .idea/
-__pycache__/
-*.pyc
+*.swp
+*.swo
+
+# OS Specific Files
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# Audio Record Artifacts & Test Outputs
+*.wav
+*.pcm
+*.log
+
+# Keep assets and include directories
+!assets/
+!include/
+!src/
+!scripts/
+!whisper.cpp/

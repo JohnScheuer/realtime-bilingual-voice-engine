@@ -8,9 +8,23 @@
 #include <algorithm>
 #include <iomanip>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 class TerminalHUD {
 public:
-    TerminalHUD() : cycle_count_(0) {}
+    TerminalHUD() : cycle_count_(0) {
+#ifdef _WIN32
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (hOut != INVALID_HANDLE_VALUE) {
+            DWORD dwMode = 0;
+            GetConsoleMode(hOut, &dwMode);
+            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SetConsoleMode(hOut, dwMode);
+        }
+#endif
+    }
 
     void render(const std::string& mode_str,
                  bool vad_active,
@@ -28,16 +42,13 @@ public:
         double p90 = compute_percentile(90.0);
         double p99 = compute_percentile(99.0);
 
-        // ANSI Terminal Control: Clear screen and move cursor to home (1,1)
         std::cout << "\033[2J\033[1;1H";
 
-        // Banner Header
         std::cout << "\033[1;36m================================================================================\033[0m\n";
-        std::cout << "\033[1;32m  REAL-TIME BILINGUAL VOICE ENGINE (C++20 / AVX2 / CUDA SM 12.0)\033[0m\n";
+        std::cout << "\033[1;32m  REAL-TIME BILINGUAL VOICE ENGINE (WINDOWS / LINUX C++20 / CUDA SM 12.0)\033[0m\n";
         std::cout << "  Author: Joao Felipe de Souza (github.com/JohnScheuer)\n";
         std::cout << "\033[1;36m================================================================================\033[0m\n\n";
 
-        // Mode & VAD Status Indicators
         std::cout << "  \033[1;35mOPERATIONAL MODE :\033[0m \033[1;33m" << mode_str << "\033[0m\n";
         std::cout << "  \033[1;35mVAD STATE        :\033[0m ";
         if (vad_active) {
@@ -47,7 +58,6 @@ public:
         }
         std::cout << " (RMS Energy: " << std::fixed << std::setprecision(4) << rms_energy << ")\n\n";
 
-        // Latency Telemetry Metrics
         std::cout << "  \033[1;36mLATENCY TELEMETRY (End-to-End Frame Processing):\033[0m\n";
         std::cout << "    Last Frame : \033[1;32m" << std::setw(6) << std::fixed << std::setprecision(2) << latency_ms << " ms\033[0m | ";
         std::cout << "P50: \033[1;36m" << std::setw(6) << p50 << " ms\033[0m | ";
@@ -55,10 +65,9 @@ public:
         std::cout << "P99: \033[1;31m" << std::setw(6) << p99 << " ms\033[0m\n\n";
 
         std::cout << "\033[1;36m--------------------------------------------------------------------------------\033[0m\n";
-        std::cout << "  \033[1;37mLIVE SUBTITLE STREAM (Local Agreement Stabilized):\033[0m\n";
+        std::cout << "  \033[1;37mLIVE SUBTITLE STREAM (WASAPI Loopback / Mic Streamed):\033[0m\n";
         std::cout << "\033[1;36m--------------------------------------------------------------------------------\033[0m\n\n";
 
-        // Render Confirmed Text & Active Hypothesis
         std::cout << "  \033[1;32m" << confirmed_text << "\033[0m";
         if (!active_text.empty()) {
             std::cout << " \033[1;33m" << active_text << "\033[0m";
